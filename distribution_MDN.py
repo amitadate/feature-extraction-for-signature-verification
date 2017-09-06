@@ -11,9 +11,9 @@ import time
 import os
 import cPickle as pickle
 
-import tensorflow as tf #built with TensorFlow version 1.0
+import tensorflow as tf  #built with TensorFlow version 1.0
 
-#mdn networks
+#mixture density networkds
 #put a dense cap on top of the rnn cells (to interface with the mixture density network)
 n_out = 1 + args.nmixtures * 6 # params = end_of_stroke + 6 parameters per Gaussian
 with tf.variable_scope('mdn_dense'):
@@ -22,10 +22,9 @@ with tf.variable_scope('mdn_dense'):
 
 output = tf.nn.xw_plus_b(out_cell2, output_w, output_b) #data flows through dense nn
 
-#finishing
 # ----- build mixture density cap on top of second recurrent cell
 def gaussian2d(x1, x2, mu1, mu2, s1, s2, rho):
-    # define gaussian mdn (eq 24, 25 from http://arxiv.org/abs/1308.0850)
+    # gaussian fucntion from -> (eq 24, 25 from http://arxiv.org/abs/1308.0850)
     x_mu1 = tf.subtract(x1, mu1)
     x_mu2 = tf.subtract(x2, mu2)
     Z = tf.square(tf.div(x_mu1, s1)) + \
